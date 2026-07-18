@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth
+  namespace: dev
+  labels:
+    app: auth
+spec:
+  replicas: {{ .Values.auth.replicaCount }}
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+        - name: auth
+          image: "{{ .Values.auth.image.repository }}:{{ .Values.auth.image.tag }}"
+          imagePullPolicy: {{ .Values.auth.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.auth.service.port }}
+          env:
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.existingSecretName }}
+                  key: JWT_SECRET
+            - name: JWT_EXPIRES_MINUTES
+              value: "{{ .Values.auth.env.JWT_EXPIRES_MINUTES }}"
+            - name: MONGO_DB
+              value: "{{ .Values.auth.env.MONGO_DB }}"
+            - name: MONGO_URL
+              value: "{{ .Values.auth.env.MONGO_URL }}"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth
+  labels:
+    app: auth
+spec:
+  type: ClusterIP
+  selector:
+    app: auth
+  ports:
+    - protocol: TCP
+      port: {{ .Values.auth.service.port }}
+      targetPort: {{ .Values.auth.service.port }}

@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: dev
+  labels:
+    app: backend
+spec:
+  replicas: {{ .Values.backend.replicaCount }}
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.backend.service.port }}
+          env:
+            - name: STORAGE_ACCOUNT_NAME
+              value: "{{ .Values.backend.env.STORAGE_ACCOUNT_NAME }}"
+            - name: CONTAINER_NAME
+              value: "{{ .Values.backend.env.CONTAINER_NAME }}"
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.existingSecretName }}
+                  key: JWT_SECRET
+            - name: JWT_EXPIRES_MINUTES
+              value: "{{ .Values.backend.env.JWT_EXPIRES_MINUTES }}"
+            - name: MAX_UPLOAD_MB
+              value: "{{ .Values.backend.env.MAX_UPLOAD_MB }}"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  type: ClusterIP
+  selector:
+    app: backend
+  ports:
+    - protocol: TCP
+      port: {{ .Values.backend.service.port }}
+      targetPort: {{ .Values.backend.service.port }}

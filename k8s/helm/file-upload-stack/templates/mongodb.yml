@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb
+  namespace: dev
+  labels:
+    app: mongodb
+spec:
+  serviceName: "mongodb"
+  replicas: {{ .Values.mongodb.replicaCount }}
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+        - name: mongodb
+          image: "{{ .Values.mongodb.image.repository }}:{{ .Values.mongodb.image.tag }}"
+          imagePullPolicy: {{ .Values.mongodb.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.mongodb.service.port }}
+          volumeMounts:
+            - name: {{ .Values.mongodb.dataVolumeName }}
+              mountPath: /data/db
+      {{- if not .Values.mongodb.persistence.enabled }}
+      volumes:
+        - name: {{ .Values.mongodb.dataVolumeName }}
+          emptyDir: {}
+      {{- end }}
+  {{- if .Values.mongodb.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ .Values.mongodb.dataVolumeName }}
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.mongodb.persistence.size }}
+        {{- if .Values.mongodb.persistence.storageClass }}
+        storageClassName: {{ .Values.mongodb.persistence.storageClass }}
+        {{- end }}
+  {{- end }}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb
+  labels:
+    app: mongodb
+spec:
+  type: ClusterIP
+  selector:
+    app: mongodb
+  ports:
+    - protocol: TCP
+      port: {{ .Values.mongodb.service.port }}
+      targetPort: {{ .Values.mongodb.service.port }}

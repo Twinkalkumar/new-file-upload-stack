@@ -1,0 +1,79 @@
+global:
+  imagePullSecrets: []
+
+frontend:
+  replicaCount: 1
+  image:
+    repository: twinkal1710/frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 80
+
+backend:
+  replicaCount: 1
+  image:
+    repository: twinkal1710/backend
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    port: 8000
+  env:
+    STORAGE_ACCOUNT_NAME: "stazlearn3"
+    CONTAINER_NAME: "files"
+    JWT_EXPIRES_MINUTES: "60"
+    MAX_UPLOAD_MB: "100"
+
+auth:
+  replicaCount: 1
+  image:
+    repository: twinkal1710/auth
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    port: 5001
+  env:
+    JWT_EXPIRES_MINUTES: "60"
+    MONGO_DB: "authdb"
+    MONGO_URL: "mongodb://mongodb:27017/"
+
+secrets:
+  existingSecretName: file-upload-stack-secrets
+  create: false
+  data:
+    JWT_SECRET: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30"
+
+mongodb:
+  replicaCount: 1
+  image:
+    repository: mongo
+    tag: "7"
+    pullPolicy: IfNotPresent
+  service:
+    port: 27017
+  persistence:
+    enabled: true
+    size: 5Gi
+    storageClass: ""
+  dataVolumeName: mongodb-data
+
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations: {}
+  host: ""
+  path: /
+  pathType: Prefix
+  tls: []
+  # Example:
+  # tls:
+  #   - secretName: file-upload-tls
+  #     hosts:
+  #       - app.example.com
+
+resources:
+  frontend: {}
+  backend: {}
+  auth: {}
+  mongodb: {}
