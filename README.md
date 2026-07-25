@@ -144,3 +144,28 @@ helm deployment:
 - helm install file-upload-stack-stage oci://registry-1.docker.io/twinkal1710/file-upload-stack --version 1.0.0
 - helm install ingress-nginx ingress-nginx/ingress-nginx
 
+1. Add Helm Repo
+- helm repo add istio https://istio-release.storage.googleapis.com/charts
+- helm repo update
+2. Install Istio Base
+- kubectl create namespace istio-system
+- helm install istio-base istio/base -n istio-system
+3. Install Istiod (Control Plane)
+- helm install istiod istio/istiod -n istio-system --wait
+4. Install Ingress Gateway
+- kubectl create namespace istio-ingress
+- helm install istio-ingressgateway istio/gateway -n istio-ingress
+5. Verify Installation
+- kubectl get pods -n istio-system
+- kubectl get pods -n istio-ingress
+6. Enable Sidecar Injection
+- kubectl create namespace dev
+- kubectl label namespace dev istio-injection=enabled --overwrite
+Verify:
+- kubectl get ns dev --show-labels
+
+Application deployment after complete setup of istio
+- helm install file-upload-stack-stage oci://registry-1.docker.io/twinkal1710/file-upload-stack --version 1.0.0 -n dev
+
+verify ``istio-proxy`` in applicaton pods. If we can see then setup completed for Istio service mesh
+
