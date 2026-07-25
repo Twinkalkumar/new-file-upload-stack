@@ -142,5 +142,5 @@ This architecture ensures:
 ---------
 helm deployment:
 - helm install file-upload-stack-stage oci://registry-1.docker.io/twinkal1710/file-upload-stack --version 1.0.0
-- helm install istio-ingressgateway istio/gateway -n istio-ingress
+- helm install ingress-nginx ingress-nginx/ingress-nginx
 
