@@ -1,0 +1,29 @@
+name: pipeline app cicd
+
+on:
+    workflow_dispatch:
+
+jobs:
+    test-auth:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code                   # checkout
+              uses: actions/checkout@v4
+            
+            - name: Set up python                   # BUILD AND UNIT TEST
+              uses: actions/setup-python@v5
+              with:
+                python-version: '3.12'
+
+            - name: Install dependencies
+              working-directory: auth
+              run: |
+                python -m pip install --upgrade pip
+                pip install -r requirements.txt
+                pip install pytest bandit
+            - name: Unit tests
+              working-directory: auth
+              run: pytest --maxfail=1 -q
+            - name: Code scan (Bandit)
+              working-directory: auth
+              run: bandit -r . -ll
