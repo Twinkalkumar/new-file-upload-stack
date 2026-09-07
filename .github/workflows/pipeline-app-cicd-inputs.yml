@@ -1,0 +1,41 @@
+name: pipeline app cicd inputs
+
+on:
+    workflow_dispatch:
+      inputs:
+        service:
+          type: choice
+          description: 'Service to test (auth or backend)'
+          options:
+            - auth
+            - backend
+          required: true
+          default: 'both'
+
+jobs:
+    CI:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                service: [auth, backend]
+        steps:
+            - name: Checkout code                   # checkout
+              uses: actions/checkout@v4
+            - name: Set up python                   # BUILD AND UNIT TEST
+              uses: actions/setup-python@v5
+              with:
+                python-version: '3.12'
+            - name: Install dependencies
+              working-directory: ${{ matrix.service }}
+              run: |
+                python -m pip install --upgrade pip
+                pip install -r requirements.txt
+                pip install pytest bandit mongomock
+
+            - name: Unit tests
+              working-directory: ${{ matrix.service }}
+              run: pytest --maxfail=1 -q
+
+            - name: Code scan (Bandit)
+              working-directory: ${{ matrix.service }}
+              run: bandit -r . -ll
