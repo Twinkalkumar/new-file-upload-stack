@@ -61,4 +61,4 @@ jobs:
                 htmlhint "frontend/*.html"
             - name: Validate nginx config syntax
               run: |
-                docker run --rm -v ${{ github.workspace }}/frontend/nginx.conf:/etc/nginx/nginx.conf:ro nginx nginx -t
+                docker run --rm -v ${{ github.workspace }}/frontend/nginx.conf:/etc/nginx/conf.d/default.conf:ro nginx nginx -t
