@@ -4,7 +4,7 @@ on:
     workflow_dispatch:
 
 jobs:
-    test-auth:
+    auth:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code                   # checkout
@@ -28,7 +28,7 @@ jobs:
               working-directory: auth
               run: bandit -r . -ll
 
-    test-backend:
+    backend:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code                   # checkout
@@ -51,3 +51,14 @@ jobs:
             - name: Code scan (Bandit)
               working-directory: backend
               run: bandit -r . -ll
+    lint-frontend:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Lint HTML
+              run: |
+                npm install -g htmlhint
+                htmlhint "frontend/*.html"
+            - name: Validate nginx config syntax
+              run: |
+                docker run --rm -v ${{ github.workspace }}/frontend/nginx.conf:/etc/nginx/nginx.conf:ro nginx nginx -t
