@@ -1,4 +1,4 @@
-name: pipeline app cicd
+name: pipeline app cicd matrix
 
 on:
     workflow_dispatch:
