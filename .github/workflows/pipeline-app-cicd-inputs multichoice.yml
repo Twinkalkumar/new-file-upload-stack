@@ -1,0 +1,42 @@
+name: pipeline app cicd multichoice
+
+on:
+    workflow_dispatch:
+      inputs:
+        auth-service:
+          type: boolean
+          description: 'Run auth service tests'
+          required: true
+        backend-service:
+          type: boolean
+          description: 'Run backend service tests'
+          required: true
+
+jobs:
+    CI:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code                   # checkout
+              uses: actions/checkout@v4
+            - name: Set up python                   # BUILD AND UNIT TEST
+              uses: actions/setup-python@v5
+              with:
+                python-version: '3.12'
+            - name: Run selected services
+              run: |
+                for SERVICE in auth backend; do
+                  if [ "$SERVICE" = "auth" ] && [ "${{ inputs.auth-service }}" != "true" ]; then
+                    continue
+                  fi
+                  if [ "$SERVICE" = "backend" ] && [ "${{ inputs.backend-service }}" != "true" ]; then
+                    continue
+                  fi
+                  echo "Running $SERVICE"
+                  cd $SERVICE
+                  python -m pip install --upgrade pip
+                  pip install -r requirements.txt
+                  pip install pytest bandit mongomock
+                  pytest --maxfail=1 -q
+                  bandit -r . -ll
+                  cd ..
+                done
