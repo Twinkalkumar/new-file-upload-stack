@@ -27,3 +27,27 @@ jobs:
             - name: Code scan (Bandit)
               working-directory: auth
               run: bandit -r . -ll
+
+    test-backend:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code                   # checkout
+              uses: actions/checkout@v4
+            
+            - name: Set up python                   # BUILD AND UNIT TEST
+              uses: actions/setup-python@v5
+              with:
+                python-version: '3.12'
+
+            - name: Install dependencies
+              working-directory: backend
+              run: |
+                python -m pip install --upgrade pip
+                pip install -r requirements.txt
+                pip install pytest bandit
+            - name: Unit tests
+              working-directory: backend
+              run: pytest --maxfail=1 -q
+            - name: Code scan (Bandit)
+              working-directory: backend
+              run: bandit -r . -ll
