@@ -4,4 +4,4 @@ azure-storage-blob==12.27.0
 azure-identity==1.17.1
 Werkzeug==3.1.6
 msgpack==1.2.1
-setuptool==83.0.0
+setuptools==83.0.0
