@@ -1,5 +1,7 @@
 FROM nginx:alpine
 
+RUN apk update && apk upgrade --no-cache
+
 # Copy HTML files
 COPY login.html /usr/share/nginx/html/
 COPY signup.html /usr/share/nginx/html/
