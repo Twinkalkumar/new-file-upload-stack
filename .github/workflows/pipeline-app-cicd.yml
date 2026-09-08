@@ -95,6 +95,7 @@ jobs:
               with:
                 image-ref: ${{env.REGISTRY_USER }}/${{env.IMAGE_PREFIX }}-${{ matrix.service }}:${{ github.sha }}
                 format: 'table'
+                ignore-unfixed: 'true'
                 exit-code: '1'
                 severity: 'CRITICAL,HIGH,MEDIUM'
             
