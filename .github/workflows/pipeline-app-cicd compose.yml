@@ -15,7 +15,7 @@ jobs:
               with:
                 python-version: '3.12'
 
-            - uses: ./.github/actions
+            - uses: ./.github/actions/action-python
               with:
                 working-directory: auth
                 python-packages: "pytest bandit mongomock"
