@@ -1,0 +1,21 @@
+name: pipeline app cicd compose
+
+on:
+    workflow_dispatch:
+
+jobs:
+    auth:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code                   # checkout
+              uses: actions/checkout@v4
+            
+            - name: Set up python                   # BUILD AND UNIT TEST
+              uses: actions/setup-python@v5
+              with:
+                python-version: '3.12'
+
+            - uses: ./.github/actions/action-python.yml
+              with:
+                working-directory: auth
+                python-packages: "pytest bandit mongomock"

@@ -1,0 +1,30 @@
+name: 'python build and test'
+description: 'Build and test python code'
+inputs:
+  working-directory:
+    description: 'The directory where the Python code is located'
+    required: true
+  python-packages:
+    description: 'Additional Python packages to install'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install dependencies
+      working-directory: ${{ inputs.working-directory }}
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install ${{ inputs.python-packages }}
+
+    - name: Unit tests
+      working-directory: ${{ inputs.working-directory }}
+      shell: bash
+      run: pytest --maxfail=1 -q
+
+    - name: Code scan (Bandit)
+      working-directory: ${{ inputs.working-directory }}
+      shell: bash
+      run: bandit -r . -ll 
