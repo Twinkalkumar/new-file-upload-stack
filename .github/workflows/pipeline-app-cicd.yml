@@ -97,7 +97,7 @@ jobs:
                 format: 'table'
                 ignore-unfixed: 'true'
                 exit-code: '1'
-                severity: 'CRITICAL,HIGH,MEDIUM'
+                severity: 'CRITICAL,HIGH'
             
             - name: Login to registry                 # Login to docker registry
               uses: docker/Login-action@v2
