@@ -28,3 +28,4 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       shell: bash
       run: bandit -r . -ll
+      
