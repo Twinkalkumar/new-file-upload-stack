@@ -108,3 +108,30 @@ jobs:
             - name: Push Image                        # push docker image to registry
               run: |
                 docker push $REGISTRY_USER/$IMAGE_PREFIX-${{ matrix.service }}:${{ github.sha }}
+
+    update-manifest:
+        runs-on: ubuntu-latest
+        needs: build-scan-push
+        permissions:
+          contents: write
+        steps:
+          - uses: actions/checkout@v4
+            with:
+              ref: main
+          - name: Install yq                    # install yq for yaml manipulation
+            run: sudo snap install yq
+
+          - name: Bump image tags in helm values
+            run: |
+              VALUE=k8s/helm/file-upload-stack/values.yaml
+              yq -i '.auth.image.tag = "${{ github.sha }}"' $VALUE
+              yq -i '.backend.image.tag = "${{ github.sha }}"' $VALUE
+              yq -i '.frontend.image.tag = "${{ github.sha }}"' $VALUE
+          
+          - name: Commit and push changes
+            run: |
+              git config --global user.name "github-actions"
+              git config --global user.email "github-actions@github.com"
+              git add k8s/helm/file-upload-stack/values.yaml
+              git commit -m "Bump image tags to $ {{ github.sha }} [skip ci]"
+              git push

@@ -4,7 +4,7 @@ global:
 frontend:
   replicaCount: 1
   image:
-    repository: twinkal1710/frontend
+    repository: twinkal1710/fileupload-frontend
     tag: latest
     pullPolicy: IfNotPresent
   service:
@@ -14,7 +14,7 @@ frontend:
 backend:
   replicaCount: 1
   image:
-    repository: twinkal1710/backend
+    repository: twinkal1710/fileupload-backend
     tag: latest
     pullPolicy: IfNotPresent
   service:
@@ -28,7 +28,7 @@ backend:
 auth:
   replicaCount: 1
   image:
-    repository: twinkal1710/auth
+    repository: twinkal1710/fileupload-auth
     tag: latest
     pullPolicy: IfNotPresent
   service:
