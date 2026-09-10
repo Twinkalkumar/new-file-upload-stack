@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: auth
-  namespace: dev
   labels:
     app: auth
 spec:

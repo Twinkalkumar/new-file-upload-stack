@@ -3,7 +3,6 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: file-upload-stack-ingress
-  namespace: dev
   labels:
     app: file-upload-stack
   {{- with .Values.ingress.annotations }}
