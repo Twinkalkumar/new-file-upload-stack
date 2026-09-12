@@ -4,7 +4,7 @@ frontend:
   replicaCount: 1
   image:
     repository: twinkal1710/fileupload-frontend
-    tag: 8c52ffeeba9f31b31e75f012b11dcd1466485f3d
+    tag: 35be58ec9a1303d024303ae343f3d5733bfdf329
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -13,7 +13,7 @@ backend:
   replicaCount: 1
   image:
     repository: twinkal1710/fileupload-backend
-    tag: 8c52ffeeba9f31b31e75f012b11dcd1466485f3d
+    tag: 35be58ec9a1303d024303ae343f3d5733bfdf329
     pullPolicy: IfNotPresent
   service:
     port: 8000
@@ -26,7 +26,7 @@ auth:
   replicaCount: 1
   image:
     repository: twinkal1710/fileupload-auth
-    tag: 8c52ffeeba9f31b31e75f012b11dcd1466485f3d
+    tag: 35be58ec9a1303d024303ae343f3d5733bfdf329
     pullPolicy: IfNotPresent
   service:
     port: 5001
