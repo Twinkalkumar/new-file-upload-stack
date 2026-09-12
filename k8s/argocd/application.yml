@@ -1,0 +1,26 @@
+apiVersion: argocdproj.io/v1alpha1
+kind: Application
+metadata:
+  name: file-upload-stack
+  namespace: argocd
+
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/Twinkalkumar/new-file-upload-stack.git
+    targetRevision: main
+    helm:
+      valueFiles:
+        - value.yaml
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fileupload
+
+  syncPolicy:
+    automated:
+      prune: true                         # remove resources that are no longer in git
+      selfHeal: true                      # revert any manual kubectl changes back to match git
+    syncOptions:
+      - CreateNamespace=true              # auto-creates the 'fileupload' namespace if missing
