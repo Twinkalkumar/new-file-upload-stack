@@ -13,7 +13,7 @@ spec:
     path: k8s/helm/file-upload-stack
     helm:
       valueFiles:
-        - value.yaml
+        - values.yaml
 
   destination:
     server: https://kubernetes.default.svc
