@@ -42,7 +42,7 @@ spec:
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: fileupload
+    namespace: myapp
 
   syncPolicy:
     automated:
