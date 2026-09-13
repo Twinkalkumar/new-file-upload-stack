@@ -13,13 +13,13 @@ metadata:
     # Your tags are git SHAs, not semver — "newest-build" just picks
     # whichever tag was pushed to the registry most recently.
     argocd-image-updater.argoproj.io/auth.update-strategy: newest-build
-    argocd-image-updater.argoproj.io/frotend.update-strategy: newest-build
+    argocd-image-updater.argoproj.io/frontend.update-strategy: newest-build
     argocd-image-updater.argoproj.io/backend.update-strategy: newest-build
 
     # Tell Image Updater exactly which Helm value path to overwrite per image
     argocd-image-updater.argoproj.io/auth.helm.image-tag: auth.image.tag
-    argocd-image-updater.argoproj.io/frontend.image-tag: frontend.image.tag
-    argocd-image-updater.argoproj.io/backend.image-tag: backend.image.tag
+    argocd-image-updater.argoproj.io/frontend.helm.image-tag: frontend.image.tag
+    argocd-image-updater.argoproj.io/backend.helm.image-tag: backend.image.tag
 
     # Write the new tag back to git (keeps values.yaml as source of truth,
     # same file your CI job also updates)
@@ -27,7 +27,7 @@ metadata:
     argocd-image-updater.argoproj.io/git-branch: main
 
     # Which registry credential secret to use when polling Docker Hub
-    argocd-image-updater.argoproj.io/pull-secret: pullsecret:argocd-image-updater/docker-creds
+    argocd-image-updater.argoproj.io/pull-secret: pullsecret:argocd-image-updater/dockerhub-creds
 
 spec:
   project: default
@@ -49,4 +49,4 @@ spec:
       prune: true # remove resources that are no longer in git
       selfHeal: true # revert any manual kubectl changes back to match git
     syncOptions:
-      - CreateNamespace=true # auto-creates the 'fileupload' namespace if missing
+      - CreateNamespace=true # auto-creates the 'myapp' namespace if missing
