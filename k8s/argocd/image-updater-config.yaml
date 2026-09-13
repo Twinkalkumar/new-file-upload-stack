@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-image-updater-config
+  namespace: argocd-image-updater
+data:
+  registries.conf: |
+    registries:
+    - name: Docker Hub
+      api_url: https://registry-1.docker.io
+      prefix: docker.io
+      credentials: secret:argocd-image-updater/dockerhub-creds#username,password
+      defaultns: library
+ 
+# NOTE: git write-back credentials are NOT configured here.
+# Image Updater reuses whatever repository credential Argo CD already
+# has for this repoURL. Create that separately as a repository-type
+# Secret in the `argocd` namespace (see chat for the exact command) —
+# it must have WRITE (push) access, not just read, since Image Updater
+# needs to commit the tag bump back to values.yaml.

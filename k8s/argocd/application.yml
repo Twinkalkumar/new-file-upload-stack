@@ -4,6 +4,34 @@ metadata:
   name: file-upload-stack
   namespace: argocd
 
+  annotations:
+    # --- Argo CD Image Updater config ---
+    # Alias each tracked image: alias=repository
+
+    argocd-image-update.argoproj.io/image-list: >-
+      auth=twinkal1710/fileupload-auth,
+      frontend=twinkal1710/fileupload-frontend,
+      backend=twinkal1710/fileupload-backend
+
+    # Your tags are git SHAs, not semver — "newest-build" just picks
+    # whichever tag was pushed to the registry most recently.
+    argocd-image-update.argoproj.io/auth.update-strategy: newest-build
+    argocd-image-update.argoproj.io/frotend.update-strategy: newest-build
+    argocd-image-update.argoproj.io/backend.update-strategy: newest-build
+
+    # Tell Image Updater exactly which Helm value path to overwrite per image
+    argocd-image-update.argoproj.io/auth.helm.image-tag: auth.image.tag
+    argocd-image-update.argoproj.io/frontend.image-tag: frontend.image.tag
+    argocd-image-update.argoproj.io/backend.image-tag: backend.image.tag
+
+    # Write the new tag back to git (keeps values.yaml as source of truth,
+    # same file your CI job also updates) 
+    argocd-image-updater.argoproj.io/write-back-method: git
+    argocd-image-updater.argoproj.io/git-branch: main
+
+    # Which registry credential secret to use when polling Docker Hub
+    argocd-image-updater.argoproj.io/pull-secret: pullsecret:argocd-image-updater/docker-creds
+
 spec:
   project: default
 
