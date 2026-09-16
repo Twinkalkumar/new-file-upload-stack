@@ -1,0 +1,10 @@
+apiVersion: argocd-image-updater.argoproj.io/v1alpha1
+kind: ImageUpdater
+metadata: 
+  name: file-upload-stack-updater
+  namespace: argocd
+
+spec:
+  applicationRefs:
+    - namePattern: "file-upload-stack"
+      useAnnotations: true
