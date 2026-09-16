@@ -1,7 +1,7 @@
 name: pipeline app cicd
 
 on:
-    workflow_dispatch:
+    push:
 
 env:
   REGISTRY_USER: twinkal1710   # or ghcr.io/yourorg
@@ -78,6 +78,8 @@ jobs:
     build-scan-push:
         runs-on: ubuntu-latest
         needs: [auth, backend, frontend]
+        environment:
+          name: docker-publish
         strategy:
           matrix:
             service: [auth, backend, frontend]
