@@ -23,7 +23,7 @@ backend:
     JWT_EXPIRES_MINUTES: "60"
     MAX_UPLOAD_MB: "100"
 auth:
-  replicaCount: 1
+  replicaCount: 2
   image:
     repository: twinkal1710/fileupload-auth
     tag: 6dca4530ccdab13c24d291f2ff5bf3364bfde671
