@@ -1,0 +1,14 @@
+helm:
+  parameters:
+  - name: auth.image.tag
+    value: c1172a047fdd2a95c17c5258d6506c9386f4aa49
+    forcestring: true
+  - name: backend.image.tag
+    value: c1172a047fdd2a95c17c5258d6506c9386f4aa49
+    forcestring: true
+  - name: frontend.image.tag
+    value: c1172a047fdd2a95c17c5258d6506c9386f4aa49
+    forcestring: true
+  - name: image.name
+    value: twinkal1710/fileupload-backend
+    forcestring: true
