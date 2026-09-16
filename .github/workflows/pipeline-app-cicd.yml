@@ -2,6 +2,8 @@ name: pipeline app cicd
 
 on:
     push:
+      paths-ignore:
+        - 'k8s/**'
 
 env:
   REGISTRY_USER: twinkal1710   # or ghcr.io/yourorg
